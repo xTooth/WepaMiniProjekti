@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/layout :: head(title='People')"/>
+    <body>
+        <header th:replace="fragments/layout :: header(name=${person.name} , site=${person.customURL})"/>    
+        <main role="main" class="container">
+            <div class="jumbotron">
+
+                <h1>People</h1>
+                <input class="form-control" id="SearchInput" onkeyup="checkMatch();" type="text" placeholder="Search..."/>
+                <div id='people'>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div th:if='${#lists.size(people) == 1}'>
+                        <p>It seems that there are no people left! <span data-feather="thumbs-up"></span> YEY!</p>
+                    </div>
+                    <ul class='row' style='list-style: none;' >                      
+                        <li class="col-4 personclass" th:if="${persons.username != person.username}" th:each="persons : ${people}">
+
+                            <div class="card mb-4 shadow-sm">
+                                <div th:if="${persons.profilepic}">
+                                    <img th:src="@{/images/{id}/content(id=${persons.profilepic.id})}"  height="225"/>
+                                </div>
+                                <div th:unless="${persons.profilepic}">
+                                    <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: User hasn't defined a picture!" ><title>User has not defined a picture!</title><rect width="100%" height="100%" fill="#55595c"/></svg>                                
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text"><span th:text='${persons.name}'></span></p>
+                                    <div class="d-flex justify-content-between align-items-center">
+
+                                        <form method="POST" action="people">
+                                            <div class="btn-group">
+                                                <input type="hidden" class="form-control" id="usernname" name="username" th:value="${persons.username}"/>
+                                                <button type="submit" class="btn btn-sm btn-outline-secondary"> <span data-feather="user-plus"></span> Add friend</button>
+                                                <a type="button" class="btn btn-sm btn-outline-secondary" th:href="@{'/person/' + ${persons.customURL}}"><span data-feather="user"></span> View profile</a>
+                                            </div>  
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </li>                                              
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            function checkMatch() {
+                var people = document.getElementsByClassName("personclass");
+                var input = $("#SearchInput").val();
+                for (var i = 0; i < people.length; i++) {
+                    if (people[i].innerHTML.indexOf(input) === -1) {
+                        people[i].style.display = 'none'
+                    } else {
+                        people[i].style.display = 'block'
+                    }
+                }
+
+            }
+            ;
+        </script>
+
+
+        <th:block th:replace="fragments/layout :: scripts"/>
+    </body>
+</html>
+

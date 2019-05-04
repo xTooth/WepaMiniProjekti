@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head th:fragment="head(title)">
+        <meta charset="UTF-8"/>
+        <title th:text="${title}"> Placeholder Title </title>       
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>        
+    </head>
+
+    <body>
+        <header th:fragment="header(name, site)">
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                <a class="navbar-brand" href="/"><span data-feather="user-x"></span> The Asocial Network</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active':''}" href="/"> <span data-feather="home"></span> Home </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/images' ? 'active':''}" href="/images"> <span data-feather="image"></span> Images </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/friends' ? 'active':''}" href="/friends"> <span data-feather="user-check"></span> Friends</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/people' ? 'active':''}" href="/people"> <span data-feather="users"></span> People</a>
+                        </li>
+                    </ul>                       
+                    <ul class="navbar-nav px-3">
+                        <li class="nav-item text-nowrap">
+                            <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI().contains({site}) ? 'active':''}" th:href="@{'/person/' + ${site}}"> <span data-feather="user"></span><span th:text="${name}"></span></a>
+                        </li>
+                        <li class="nav-item text-nowrap">
+                            
+                            <a sec:authorize="isAuthenticated()" id="logoutBtn" class="nav-link" href="/logout"><span data-feather="log-out"></span> Sign out</a>
+                            <a sec:authorize="!isAuthenticated()" class="nav-link" href="/">Log in</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </nav>
+        </header>
+        
+        <button th:fragment="likebutton" class="btn btn-outline-primary btn-xs"><span data-feather="thumbs-up"></span> Like</button>
+        
+        
+        <th:block th:fragment="scripts">
+            <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+            <script>
+                feather.replace()
+            </script>
+            <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        </th:block>
+    </body>
+
+
+
+</html>

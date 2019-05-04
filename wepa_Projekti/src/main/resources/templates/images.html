@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/layout :: head(title='Images')"/>
+    <body>
+        <header th:replace="fragments/layout :: header(name=${person.name} , site=${person.customURL})"/>    
+        <main role="main" class="container">
+            <div class="jumbotron">
+
+                <h1><span th:text="${person.name}">Someone</span>'s images</h1>
+                <hr/>
+                <div id="newImagePostForm" th:unless=" ${#lists.size(images)>=10}">
+                    
+                    <form method="POST" enctype="multipart/form-data" action="/newImage">
+                        <input  type="file" name="file" id="file"/>
+                        <hr/>
+                        <input class="form-control w-100" type="text"  placeholder="Description   (NOTE: image may not exceed 1MB in size.)" name="desc" id="desc"/>
+                        <br/>
+                        <button class="btn btn-outline-primary" type="submit"><span data-feather="image"></span> Save</button>                       
+                    </form>
+                </div>
+
+                <div id='images'>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <ul class='row'style='list-style: none;'>                      
+                        <li class="col-4" th:each="image : ${images}">
+                            <div class="card mb-4 shadow-sm">
+                                <img th:src="@{/images/{id}/content(id=${image.image.id})}"/>
+                                <div class="card-body">
+                                    <p class="card-text" th:text="${image.text}">placeholder</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <form method="POST" action="/imageEdit">
+                                            <input type="hidden" class="form-control" id="imageID" name="imageID" th:value="${image.id}"/>
+                                            <div class="btn-group">
+                                                <button type="submit" value="profilePic" name="action" class="btn btn-sm btn-outline-primary">Set as profile picture</button>                                     
+                                                <button type="submit" value="Delete" name="action" class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>                                              
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+
+        <th:block th:replace="fragments/layout :: scripts"/>
+    </body>
+</html>
+

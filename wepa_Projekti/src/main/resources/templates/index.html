@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/layout :: head(title='Home')"/>
+    <body>
+        <header th:replace="fragments/layout :: header(name=${person.name} , site=${person.customURL})"/>    
+        <main role="main" class="container">
+            <br/>
+            <br/>
+            <br/>                
+            <div class='jumbotron'>
+                <div>
+                    <form method="POST" action="/newpost">
+                        <input class="form-control w-100" type="text"  placeholder="Tell your friends whats up!" name="content" id="content"/>
+                        <button class="btn btn-primary" type="submit"><span data-feather="smile"></span> Share!</button>
+                    </form>
+                </div>
+                <br/>
+                <br/>
+                <ul style="list-style: none;">
+                            <li th:each="post : ${posts}" style="margin-bottom: 15px;">
+                                <div class="border border-primary rounded" style="padding: 10px;">
+                                    <div style="padding: 10px;">
+                                        <div class="media text-muted pt-3">
+                                            <div th:if="${post.image}">
+                                                <img th:src="@{/images/{id}/content(id=${post.image.id})}"/>
+                                            </div>
+                                            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                                <a style="color:dimgray;" th:href="@{'/person/' + ${post.poster.customURL}}"><strong class="d-block text-gray-dark" th:text="${post.poster.name}">@username</strong></a>
+                                                <span th:text="${#temporals.format(post.time,'dd-MM-yyyy HH:mm')}">timestamp</span><br/>
+                                                <span th:text="${post.text}">placeholder text.</span>
+                                            </p>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                            </div>
+                                            <div class="col-3">
+                                                <p class="small border-gray"> number of likes: <span th:text="${post.likes}"> adsasd </span></p>
+                                            </div>
+                                            <div class="col-3">
+                                                <div th:if="${post.likers.contains(person)}" style="margin-bottom: 10px;">
+                                                    <button class="btn btn-outline-success btn-xs" disabled="disabled"><span data-feather="check-square"></span> Liked</button>
+                                                </div>
+                                                <div th:unless="${post.likers.contains(person)}" style="margin-bottom: 10px;">
+                                                    <form method ="POST" action="likePost">
+                                                        <input type="hidden" th:value="${post.id}" name="PostID"/>
+                                                        <button th:replace="fragments/layout :: likebutton"/>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    
+                                    
+                                    <form class='form-inline' method="POST" action="comment" style="width: 100%; padding: 10px;">
+                                        <input type="hidden" th:value="${post.id}" name="PostID"/>
+                                        <input class="form-control w-100" type="text"  placeholder="Leave your comment!" name="content"/><br/>
+                                        <input class="btn btn-primary" type="submit"/>            
+                                    </form>
+                                    <hr class="colorgraph"/>
+                                    <ul style="list-style: none;">
+                                        <li th:each="comment, iterStat : ${post.comments}" th:if="${iterStat.index}<10">
+                                            <div style="padding: 10px;" class="row">
+                                                <div class="col-8">
+                                                    <div class="media text-muted pt-3">
+                                                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                                            <a style="color:dimgray;" th:href="@{'/person/' + ${comment.poster.customURL}}"><strong class="d-block text-gray-dark" th:text="${comment.poster.name}">@username</strong></a>
+                                                            <span th:text="${#temporals.format(comment.time,'dd-MM-yyyy HH:mm')}">timestamp</span><br/>
+                                                            <span th:text="${comment.text}"></span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">                           
+                                                    <div th:if="${comment.likers.contains(person)}">
+                                                        <button class="btn btn-outline-success btn-xs" disabled="disabled"><span data-feather="check-square"></span> Liked</button>
+                                                    </div>
+                                                    <div th:unless="${comment.likers.contains(person)}">
+                                                        <br/>
+                                                        <form method ="POST" action="likeComment">
+                                                            <input type="hidden" th:value="${comment.id}" name="CommentID"/>
+                                                            <button th:replace="fragments/layout :: likebutton"/>
+                                                        </form>
+                                                    </div>
+                                                    <p class="small border-gray"> number of likes: <span th:text="${comment.likes}"> adsasd </span></p>
+                                                </div>
+                                            </div>
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </main>
+
+
+        <th:block th:replace="fragments/layout :: scripts"/>
+    </body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/layout :: head(title='Friends')"/>
+    <body>
+        <header th:replace="fragments/layout :: header(name=${person.name} , site=${person.customURL})"/>    
+        <main role="main" class="container">
+            <div class="jumbotron">
+
+                <h1><span th:text="${person.name}">Someone</span>'s friends</h1>
+                <div id="friendrequests">
+                    <br/>
+                    <br/>
+                    <br/>
+                    <h4>Friend Requests</h4>
+                    <div th:if='${#lists.isEmpty(friendrequests)}'>
+                        <p>You don't have any new friend requests.</p>
+                    </div>
+                    <div >
+                        <ul class="row">
+                            <li style='list-style: none;'  class='col-4' th:each="friendrequest : ${friendrequests}">
+                                <div class="card mb-4 shadow-sm">
+                                    <div th:if="${friendrequest.profilepic}">
+                                        <img th:src="@{/images/{id}/content(id=${friendrequest.profilepic.id})}"  height="225"/>
+                                    </div>
+                                    <div th:unless="${friendrequest.profilepic}">
+                                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: User hasn't defined a picture!" ><title>User has not defined a picture!</title><rect width="100%" height="100%" fill="#55595c"/></svg>                                
+                                    </div>
+                                    <div class="card-body">
+                                        <a class="card-text" th:href="@{'/person/' + ${friendrequest.customURL}}"><span th:text="${friendrequest.name}"></span></a>
+                                        <p> Request recieved: <span th:text="${#temporals.format(times.get(friendrequest),'dd-MM-yyyy HH:mm')}">PlaceholderForTime</span></p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <form class='form-inline' method="POST" action="friends">
+                                                <input type="hidden" class="form-control" id="sender" name="sender" th:value="${friendrequest.username}"/>                               
+                                                <div class="btn-group">
+                                                    <button class='btn btn-sm btn-outline-primary' id="add" type="submit" value="add" name="action">Add</button>
+                                                    <button class='btn  btn-sm btn-outline-secondary' id="ignore" type="submit" value="ignore" name="action">Ignore</button>
+                                                    <button class='btn btn-sm btn-outline-danger' id="block" type="submit" value="block" name="action">Block</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id='friends'>
+                    <h4>Friends</h4>
+                    <div th:if='${#lists.isEmpty(friends)}'>
+                        <p>Oh no, you seem to be truly asocial!</p>
+                    </div>
+
+                    <ul class='row' >
+                        <li style='list-style: none;' class='col-4' th:each="friends : ${friends}">
+                            <div class="card mb-4 shadow-sm">
+                                <div th:if="${friends.profilepic}">
+                                    <img th:src="@{/images/{id}/content(id=${friends.profilepic.id})}"  height="225"/>
+                                </div>
+                                <div th:unless="${friends.profilepic}">
+                                    <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: User hasn't defined a picture!" ><title>User has not defined a picture!</title><rect width="100%" height="100%" fill="#55595c"/></svg>                                
+                                </div><div class="card-body">
+                                    <a class="card-text"  th:href="@{'/person/' + ${friends.customURL}}"><span th:text='${friends.name}'>Name</span></a> 
+                                    <br/><br/>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <form method="POST" action="ctrl">
+                                            <input type="hidden" class="form-control" id="friend" name="friend" th:value="${friends.username}"/> 
+                                            <div class="btn-group">
+                                                <button class='btn btn-sm btn-outline-dark' id="remove" type="submit" name="action" value="remove">Remove</button>
+                                                <button class='btn btn-sm btn-outline-danger' id="block" type="submit" name="action" value="block">Block</button>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>                        
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+
+        <th:block th:replace="fragments/layout :: scripts"/>
+    </body>
+</html>

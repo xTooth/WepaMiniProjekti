@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/layout :: head(title='Sign in')"/>
+
+    <body class="text-center" style="display: flex; align-items: center; height: 100%">
+        <div class="container" style="right: auto; bottom: auto; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <h1><span data-feather="user-x"></span> The Asocial Network</h1>
+            <div class="row">
+                <div class="col">
+                </div>
+                <div class="col">
+                    
+                    <form  method="POST" action="login">
+                        <h2>Sign in</h2>                      
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Username" required="required"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="password" class="form-control" name="password" placeholder="Password" required="required"/>
+                        </div>
+                        <div style="color:white; background-color: rgba(255, 35, 35, 0.65); border-radius: 12px; padding: 5px 20px; margin-bottom: 20px" th:if="${param.error}">
+                            Invalid username or password.
+                        </div>
+                        <div class="form-group">
+
+                            <button type="submit" class="btn btn-primary"> <span data-feather="log-in"></span> Sign in</button>
+                        </div>
+
+                    </form>
+                    <h5>OR</h5>
+                    <a th:href="register" class="btn btn-primary">Create account</a>
+                </div>
+                <div class="col">
+
+                </div>
+                <th:block th:replace="fragments/layout :: scripts"/>
+            </div>
+        </div>
+    </body>
+</html>
